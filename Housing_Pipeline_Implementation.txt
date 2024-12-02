@@ -1,0 +1,62 @@
+Ah, I see what you're saying! Thanks for the clarification. If the user is only inputting income and credit score (rather than specific preferences like the number of bedrooms, bathrooms, or location), the way we would use the price prediction pipeline in the project needs to shift a bit.
+
+Here’s the breakdown and how we can adjust the approach:
+
+How the Price Prediction Pipeline Can Still Be Used:
+In your case, since the user will only provide their income and credit score (rather than specific house features like number of bedrooms, bathrooms, etc.), the goal of the price prediction model changes. Instead of predicting the price of homes based on user preferences, we can use the price prediction model to suggest properties within the user's price range based on their financial situation.
+
+The price prediction model would still work, but it would serve a slightly different purpose:
+
+Adjusted Workflow:
+User Input:
+
+Income: The user enters their income.
+Credit Score: The user enters their credit score.
+Credit Score Classification:
+
+The backend uses the credit score classification model to predict whether the user has bad, fair, or good credit.
+This will give the user a mapped credit score (e.g., 625 for "fair" credit).
+Loan Eligibility:
+
+Based on their mapped credit score and income, the backend determines the user’s loan eligibility (e.g., the maximum loan they are eligible for).
+This might be done using predefined eligibility rules based on credit score ranges (e.g., users with bad credit are not eligible for a loan, while users with good credit are eligible for a higher loan amount).
+Property Suggestions:
+
+Once the maximum loan amount is determined, the system can filter properties based on the price range the user can afford.
+The price prediction model can be used to estimate prices of available properties (within a certain area or from a dataset of homes) and suggest the properties the user is most likely to afford, based on their predicted loan eligibility and income.
+To sort the properties: The backend can choose to sort the properties by the largest living space, highest number of bedrooms/bathrooms, etc., based on what the user would likely prefer as "value" for their money.
+Modifying the Pipeline for This Use Case:
+Instead of directly predicting a single property based on user preferences, the model will now be used to predict a range of property prices that match the user’s loan eligibility. Here’s how the pipeline would adapt:
+
+Income + Credit Score → Loan Eligibility:
+
+Calculate loan eligibility based on income and credit score.
+Price Prediction:
+
+Once you know the affordable price range, you can use the price prediction model to predict or suggest properties within that price range (or, alternatively, you can filter the dataset of properties directly by price, if it's a dataset you have access to).
+Filtering and Sorting:
+
+Sort the properties in terms of value: For example, properties with larger living spaces and more bedrooms/bathrooms for the given price range can be ranked as more valuable.
+Return the properties that the user is most likely to afford based on the loan eligibility derived from their income and credit score.
+Example of Adjusted Workflow:
+User Input:
+
+Income: $50,000
+Credit Score: 625
+Step 1: Credit score classification predicts fair credit (mapped to 625).
+
+Step 2: Loan eligibility model determines that, based on the user’s income and credit score, they qualify for a loan of up to $300,000.
+
+Step 3: The backend filters a list of properties where the price is less than or equal to $300,000 and then sorts them by living space and number of bedrooms.
+
+Step 4: Display the most affordable properties based on the user’s loan eligibility, such as:
+
+Property 1: $275,000, 3 bedrooms, 2 bathrooms, 1,800 sq ft
+Property 2: $290,000, 4 bedrooms, 3 bathrooms, 2,000 sq ft
+Property 3: $280,000, 2 bedrooms, 1 bathroom, 1,500 sq ft
+These properties are sorted based on best value for the price.
+
+Key Points:
+Price Prediction would still be used but in the context of suggesting properties that fit the user's loan eligibility.
+Property suggestions would be based on price filtering rather than specific user preferences about house features.
+You don’t need to modify the price prediction pipeline significantly, but you might need to adjust the way you retrieve and present the predicted prices.
